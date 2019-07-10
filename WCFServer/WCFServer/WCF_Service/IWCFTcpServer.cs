@@ -29,4 +29,30 @@ namespace WCF_Tcp_Server
         [OperationContract]
         void SetDataToServer(string someStr);
     }
+
+    [ServiceContract]
+    public interface IHelloWorldCallback
+    {
+        [OperationContract]
+        void SetData(string messgae);
+    }
+
+    //[ServiceContract(CallbackContract = typeof(IHelloWorldCallback))]
+    [ServiceContract]
+    public interface IHelloWorld// : IHelloWorldCallback
+    {
+        [OperationContract]
+        string SayHello();
+
+        [OperationContract]
+        void Join();
+    }
+
+    //public class HeloWorldWCFService : IHelloWorld
+    //{
+    //    public string SayHello()
+    //    {
+    //        return "Heelo WCF World!";
+    //    }
+    //}
 }

@@ -8,7 +8,7 @@ using System.ServiceModel;
 namespace WCF_Tcp_Server
 {
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Single)]
-    class WCFTcpServer : IWCFTcpServer, IDisposable
+    class WCFTcpServer : IWCFTcpServer, IHelloWorld, IDisposable
     {
         private static WCFTcpServer Instance = null;
 
@@ -18,7 +18,13 @@ namespace WCF_Tcp_Server
             {
                 Instance = new WCFTcpServer();
             }
+
             return Instance;
+        }
+
+        public string SayHello()
+        {
+            return $"Hello WCF World! - {DateTime.Now.ToString("yyyy.MM.dd hh:mm:ss")}";
         }
 
         ////클라이언트들을 모을 배열이다.
@@ -40,6 +46,8 @@ namespace WCF_Tcp_Server
             //각종 정보를 얻는다
             IClientChannel channel = client as IClientChannel;
             WCFTcpServerForm.AddClient(channel);
+
+            WCFTcpServerForm.StartTimer();
         }
 
         public void StopService()
@@ -57,20 +65,27 @@ namespace WCF_Tcp_Server
             }
         }
 
-        private void BrodCastMessage(WCFMessageKind messageKind, object data)
+        public void BrodCastMessage(WCFMessageKind messageKind, object data)
         {
-            foreach (IWCFTcpClientCallback client in Common.clients)
+            try
             {
-                //클라이언트 들은 IClientChannel로 타입캐스팅을 하여
-                //상태 체크를 한다. 그중 접속이 꺼지거나,
-                //전송을 할수 없는 상황을 체크하여 활성 클라이언트만 골라낼수 있다
-                // cf)channel.State
-                client.SetDataToClient(messageKind, data);
+                foreach (IWCFTcpClientCallback client in Common.clients)
+                {
+                    //클라이언트 들은 IClientChannel로 타입캐스팅을 하여
+                    //상태 체크를 한다. 그중 접속이 꺼지거나,
+                    //전송을 할수 없는 상황을 체크하여 활성 클라이언트만 골라낼수 있다
+                    // cf)channel.State
+                    client.SetDataToClient(messageKind, data);
+                }
+            }
+            catch (Exception ex)
+            {
+                string ss = ex.Message;
             }
         }
 
         //서버가 클라이언트들에게 전송
-        public void brodcast(string message)
+        public void BrodCast(string message)
         {
             BrodCastMessage(WCFMessageKind.Message, message);
 
@@ -88,12 +103,25 @@ namespace WCF_Tcp_Server
 
         public void Dispose()
         {
-            BrodCastMessage(WCFMessageKind.State, CommunicationState.Closed);
+            //BrodCastMessage(WCFMessageKind.State, CommunicationState.Closed);
         }
 
         public void SetDataToServer(string someStr)
         {
             Console.WriteLine(someStr);
+        }
+
+        IHelloWorldCallback helloJoin;
+        public void SetData(string message)
+        {
+            helloJoin.SetData($"ToData - {DateTime.Now.ToString("yyyy.MM.dd hh: mm:ss")}");
+        }
+
+        public void Join()
+        {
+            OperationContext oc = OperationContext.Current;
+
+            helloJoin = oc.GetCallbackChannel<IHelloWorldCallback>();
         }
     }
 }

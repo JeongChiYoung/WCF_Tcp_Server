@@ -28,11 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.listClient = new System.Windows.Forms.ListBox();
             this.textBoxMessage = new System.Windows.Forms.TextBox();
             this.buttonSend = new System.Windows.Forms.Button();
             this.buttonOpen = new System.Windows.Forms.Button();
             this.buttonClose = new System.Windows.Forms.Button();
+            this.labelTimer = new System.Windows.Forms.Label();
+            this.timerPoll = new System.Windows.Forms.Timer(this.components);
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // listClient
@@ -83,11 +87,39 @@
             this.buttonClose.UseVisualStyleBackColor = true;
             this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
             // 
+            // labelTimer
+            // 
+            this.labelTimer.BackColor = System.Drawing.Color.Khaki;
+            this.labelTimer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.labelTimer.Font = new System.Drawing.Font("맑은 고딕", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.labelTimer.Location = new System.Drawing.Point(12, 454);
+            this.labelTimer.Name = "labelTimer";
+            this.labelTimer.Size = new System.Drawing.Size(89, 26);
+            this.labelTimer.TabIndex = 4;
+            this.labelTimer.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // timerPoll
+            // 
+            this.timerPoll.Interval = 1000;
+            this.timerPoll.Tick += new System.EventHandler(this.timerPoll_Tick);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(397, 460);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 5;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // WCFTcpServerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 497);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.labelTimer);
             this.Controls.Add(this.buttonClose);
             this.Controls.Add(this.buttonOpen);
             this.Controls.Add(this.buttonSend);
@@ -108,6 +140,9 @@
         private System.Windows.Forms.Button buttonSend;
         private System.Windows.Forms.Button buttonOpen;
         private System.Windows.Forms.Button buttonClose;
+        private System.Windows.Forms.Label labelTimer;
+        private System.Windows.Forms.Timer timerPoll;
+        private System.Windows.Forms.Button button1;
     }
 }
 
